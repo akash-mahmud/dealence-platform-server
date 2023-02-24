@@ -7,6 +7,9 @@ const { checkAuthentication } = require("../middleware/Auth");
 const router = express.Router();
 
 router.get("/me", UserController.me);
+
+
+
 router.post("/login", UserController.login);
 router.post("/register", UserController.register);
 router.put("/updateInfo", UserController.updateInfo);

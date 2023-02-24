@@ -4,9 +4,7 @@ const { checkAuthentication, checkIsActive } = require("../middleware/Auth");
 const router = express.Router();
 
 router.get("/", checkAuthentication, TransactionController.list);
-router.post('/test',async(req,res) => {
 
-});
 router.post("/deposit", checkAuthentication, checkIsActive, TransactionController.deposit);
 router.post(
   '/create-payment-intent',

@@ -219,37 +219,39 @@ exports.stripeDepositEban = async (req, res) => {
 
 exports.cryptoDeposit = async (req, res) => {
 
-  let { amount } = req.body;
-       amount = parseFloat(amount);
-    if (!amount) {
-      return res.status(404).send('enter a amount');
-    }
-  const transactionFee = amount*0.03;
-  const deposit = amount + transactionFee;
 
-  var checkoutData = {
-    name: 'Deposit money',
-    description: 'Please select a cryptocurrency and proceed with the deposit. Transaction fees will be added to your amount.',
-    logo_url:
-      'https://res.cloudinary.com/commerce/image/upload/v1648735619/gej4brwfic2d5klru0q4.png',
-    pricing_type: 'fixed_price',
-    local_price: {
-      amount: deposit,
-      currency: 'EUR',
-    },
-    requested_info: [],
-  };
-try {
-//         await Checkout.create(checkoutData, function (error, response) {
-//           if (!error) {
-//  console.log(response);
-//  return res.status(201).send(response);
-//           }else{
-//              console.log(error);
-//                return res.status(403).send(error);
-//           }
+  try {
+    let { amount } = req.body;
+    amount = parseFloat(amount);
+    if (!amount) {
+      return res.status(404).send("enter a amount");
+    }
+    const transactionFee = amount * 0.03;
+    const deposit = amount + transactionFee;
+
+    var checkoutData = {
+      name: "Deposit money",
+      description:
+        "Please select a cryptocurrency and proceed with the deposit. Transaction fees will be added to your amount.",
+      logo_url:
+        "https://res.cloudinary.com/commerce/image/upload/v1648735619/gej4brwfic2d5klru0q4.png",
+      pricing_type: "fixed_price",
+      local_price: {
+        amount: deposit,
+        currency: "EUR",
+      },
+      requested_info: [],
+    };
+        await Checkout.create(checkoutData, function (error, response) {
+          if (!error) {
+
+ return res.status(201).send(response);
+          }else{
+             console.log(error);
+               return res.status(403).send(error);
+          }
          
-//         });
+        });
 
 } catch (error) {
     return res.status(403).send(error);
@@ -261,56 +263,62 @@ try {
 };
 
 exports.withdraw = async function (req, res) {
-  const withdrawAmount = parseFloat(req.body.withdrawAmount);
-  console.log(req.body);
-  var account = await Account.findOne({
-    where: {
-      userId: req.user.id,
-    },
-  });
-  if (withdrawAmount <= account.availableCredit) {
-    await Transaction.create({
-      userId: req.user.id,
-      date: Date.now(),
-      type: transactionsType.WITHDRAWAL,
-      amount: withdrawAmount,
-      iban: req.body.iban,
-    });
+  try {
+      const withdrawAmount = parseFloat(req.body.withdrawAmount);
+      console.log(req.body);
+      var account = await Account.findOne({
+        where: {
+          userId: req.user.id,
+        },
+      });
+      if (withdrawAmount <= account.availableCredit) {
+        await Transaction.create({
+          userId: req.user.id,
+          date: Date.now(),
+          type: transactionsType.WITHDRAWAL,
+          amount: withdrawAmount,
+          iban: req.body.iban,
+        });
 
-    await Account.decrement('availableCredit', {
-      by: withdrawAmount,
-      where: { userId: req.user.id },
-    });
-    const mailer = new Mailer();
-    let depositInfoEmail = await mailer.getWithdrawInfoMail(
-      req.user,
-      req.body.withdrawNameFull,
-      req.body.bankName,
-      req.body.swift,
-      req.body.withdrawEmail,
+        await Account.decrement("availableCredit", {
+          by: withdrawAmount,
+          where: { userId: req.user.id },
+        });
+        const mailer = new Mailer();
+        let depositInfoEmail = await mailer.getWithdrawInfoMail(
+          req.user,
+          req.body.withdrawNameFull,
+          req.body.bankName,
+          req.body.swift,
+          req.body.withdrawEmail,
 
-      withdrawAmount,
-      req.body.iban
-    );
+          withdrawAmount,
+          req.body.iban
+        );
 
-    let depositInfoEmailAdmin = await mailer.getWithdrawInfoMailAdmin(
-      req.user,
-      req.body.withdrawNameFull,
-      req.body.bankName,
-      req.body.swift,
-      req.body.withdrawEmail,
+        let depositInfoEmailAdmin = await mailer.getWithdrawInfoMailAdmin(
+          req.user,
+          req.body.withdrawNameFull,
+          req.body.bankName,
+          req.body.swift,
+          req.body.withdrawEmail,
 
-      withdrawAmount,
-      req.body.iban
-    );
+          withdrawAmount,
+          req.body.iban
+        );
 
-    await mailer.sendMailSync(depositInfoEmail);
-    await mailer.sendMailSync(depositInfoEmailAdmin);
+  await mailer.sendMailSync(depositInfoEmail);
+    
+        await mailer.sendMailSync(depositInfoEmailAdmin);
 
-    return res.status(201).send('success');
-  } else {
-    res.send('Not enough balance');
+        return res.status(201).send("success");
+      } else {
+        res.send("Not enough balance");
+      }
+  } catch (error) {
+    console.log(error.message);
   }
+
 };
 
 exports.cryptoWithdraw = async function (req, res) {

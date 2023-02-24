@@ -13,14 +13,19 @@ async function hashPassword(plainTextPassword) {
     return await bcrypt.hash(plainTextPassword, 10);
 }
 
-exports.me = async function(req, res) {
-    if (req.user != null) {
-        const user = await User.findOne({ where: { id: req.user.id } });
+exports.me = async function (req, res) {
+    try {
+          if (req.user != null) {
+            const user = await User.findOne({ where: { id: req.user.id } });
 
-        res.send(user);
-    } else {
-        res.send(req.user);
+            res.send(user);
+          } else {
+            res.status(403).send('unauthorised');
+          }  
+    } catch (error) {
+                res.status(403).send(error.message);
     }
+
 }
 
 exports.login = function(req, res, next) {

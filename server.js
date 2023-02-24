@@ -25,19 +25,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    // origin: process.env.DEVELOPMENT,
+    origin: [
+      "http://127.0.0.1:5173",
+      "http://localhost:5173",
+      "http://panel.dealence.com",
+      "https://app.dealence.com",
+      "http://localhost:3000",
+    ],
     credentials: true,
-  }) 
+  })
 );
-var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-}
+// var allowCrossDomain = function(req, res, next) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type');
+//     next();
+// }
 
 
-app.use(allowCrossDomain);
+// app.use(allowCrossDomain);
 
 
 
@@ -63,10 +69,10 @@ app.use('/api', router);
 
 
 
-app.use(express.static(path.join(__dirname, '..', '/frontend/build')));
-app.get('*', (req, res) =>
-res.sendFile(path.join(__dirname,'..' ,'/frontend/build/index.html'))
-);
+// app.use(express.static(path.join(__dirname, '..', '/frontend/build')));
+// app.get('*', (req, res) =>
+// res.sendFile(path.join(__dirname,'..' ,'/frontend/build/index.html'))
+// );
 
 
 

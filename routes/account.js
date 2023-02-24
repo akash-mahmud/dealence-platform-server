@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.get("/balance", checkAuthentication, AccountController.balance);
 router.get('/ie', checkAuthentication, AccountController.interestEarned);
-router.get("/balance", checkAuthentication, AccountController.balance);
+
 
 module.exports = router;
