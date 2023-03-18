@@ -6,48 +6,49 @@ const rates = require("../constants/rates");
  * This function calculates the interest payout,
  * returning both the accrued amount and an array
  * of expired increments, whose date should be reset
- *  
+ *
  * @param Array<Increment> increments: list of increments to be evalued
  */
 function calculateAccruedInterest(increments) {
-    const today = new Date();
-    const todayMoment = moment(today);
+  const today = new Date();
+  const todayMoment = moment(today);
 
-    let userAccruedInterest = 0.0;
-    let expiredIncrements = [];
+  let userAccruedInterest = 0.0;
+  let expiredIncrements = [];
 
-    for (let j = 0; j < increments.length; j++) {
-        // Check if the increment expired. If so add the accrued interest
-        const increment = increments[j];
-        const monthsElapsed = todayMoment.diff(
-          moment(increment.startDate),
-          'months',
-          true
-        );
-//         console.log(new Date(increment.startDate).toDateString());
-// console.log(todayMoment.diff(moment(increment.startDate), 'months', true));
-// console.log('Variable');
-// console.log(monthsElapsed);
-// console.log(Math.round(monthsElapsed)); 
-// console.log(typeof increment.plan);
-// console.log(typeof plans.BIMONTHLY);
-// console.log(Math.round(monthsElapsed));
-// console.log( Math.round(monthsElapsed) === 6);
-        if (increment.plan == plans.BIMONTHLY && Math.round(monthsElapsed) >= 2) {
-          console.log('heloo I am bio monthly');
-          userAccruedInterest += payoutForIncrement(increment);
-          expiredIncrements.push(increment);
-        } else if (increment.plan == plans.SEMIANNUAL && Math.round(monthsElapsed) >= 6) {
-             console.log('heloo I am Semi monthly');
-          userAccruedInterest += payoutForIncrement(increment);
-          expiredIncrements.push(increment);
-        }
-    } 
-
-    return {
-        interest: userAccruedInterest,
-        expiredIncrements: expiredIncrements
+  for (let j = 0; j < increments.length; j++) {
+    // Check if the increment expired. If so add the accrued interest
+    const increment = increments[j];
+    const monthsElapsed = todayMoment.diff(
+      moment(increment.startDate),
+      "months",
+      true
+    );
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    if (increment.plan == plans.BIMONTHLY && Math.round(monthsElapsed) >= 2) {
+      userAccruedInterest += payoutForIncrement(increment);
+      expiredIncrements.push(increment);
+    } else if (
+      increment.plan == plans.SEMIANNUAL &&
+      Math.round(monthsElapsed) >= 6
+    ) {
+      userAccruedInterest += payoutForIncrement(increment);
+      expiredIncrements.push(increment);
     }
+  }
+
+  return {
+    interest: userAccruedInterest,
+    expiredIncrements: expiredIncrements,
+  };
 }
 
 function payoutForIncrement(increment) {
@@ -86,8 +87,8 @@ function calculatePayoutsOverTime(increments) {
     day: totalPayoutPerDay.toFixed(2),
     week: (totalPayoutPerDay * 7).toFixed(2),
     month: (totalPayoutPerDay * 30).toFixed(2),
-    year: (totalPayoutPerDay * 365).toFixed(2)
-  }
+    year: (totalPayoutPerDay * 365).toFixed(2),
+  };
 }
 
 exports.calculateAccruedInterest = calculateAccruedInterest;
