@@ -30,7 +30,7 @@ jobs:
           sudo git pull origin master
           sudo git status
           sudo rm .env
-          sudo touch .env
-          sudo echo "${{ secrets.ENV_FILE }}" > .env
+
+          echo "${{ secrets.ENV_FILE }}" | sudo tee -a .env
           sudo pnpm install --only=prod
           sudo pm2 restart dealence-platform-server
