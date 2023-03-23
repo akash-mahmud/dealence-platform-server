@@ -49,18 +49,7 @@ exports.withdraw = async function (req, res) {
       },
     });
     if (withdrawAmount <= account.availableCredit) {
-      await Transaction.create({
-        userId: req.user.id,
-        date: Date.now(),
-        type: transactionsType.WITHDRAWAL,
-        amount: withdrawAmount,
-        iban: req.body.iban,
-      });
 
-      await Account.decrement("availableCredit", {
-        by: withdrawAmount,
-        where: { userId: req.user.id },
-      });
       const mailer = new Mailer();
       let depositInfoEmail = await mailer.getWithdrawInfoMail(
         req.user,

@@ -165,8 +165,8 @@ exports.updateInfo = async function (req, res) {
         city: req.body.city,
         zip: req.body.zip,
         country: req.body.country,
-        isDocumentUploaded: true,
-        isContractSigned: true,
+        // isDocumentUploaded: true,
+        // isContractSigned: true,
       },
       { where: { id: req.user.id } }
     );
@@ -183,7 +183,15 @@ exports.updateInfo = async function (req, res) {
 
     try {
  const resEmail= await mailer.sendMailSync(documentVerificationEmail);
-   console.log(resEmail); 
+      console.log(resEmail);
+       await User.update(
+         {
+
+           isDocumentUploaded: true,
+           isContractSigned: true,
+         },
+         { where: { id: req.user.id } }
+       );   
       res.send({ message: "User updated successfully" });
     } catch (error) {
       const errorString = `Error sending email: ${error}`;
