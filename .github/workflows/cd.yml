@@ -29,6 +29,7 @@ jobs:
           cd dealence-platform-server
           sudo git pull origin master
           sudo git status
+          sudo rm .env
           sudo touch .env
           sudo echo "${{ secrets.ENV_FILE }}" > .env
           sudo pnpm install --only=prod
