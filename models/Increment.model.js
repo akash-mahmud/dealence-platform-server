@@ -6,24 +6,29 @@ const plans = require("../constants/plans");
  */
 module.exports = (sequelize, Sequelize) => {
     const Increment = sequelize.define("increment", {
-        id: {
-            type: Sequelize.UUID,
-            defaultValue: Sequelize.UUIDV4,
-            allowNull: false,
-            primaryKey: true
-        },
-        plan: {
-            type: Sequelize.ENUM(plans.BIMONTHLY, plans.SEMIANNUAL),
-            allowNull: false
-        },
-        principal: {
-            type: Sequelize.REAL,
-            allowNull: false
-        },
-        startDate: {
-            type: Sequelize.DATE,
-            allowNull: false
-        }
+      id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
+      },
+      plan: {
+        type: Sequelize.ENUM(plans.BIMONTHLY, plans.SEMIANNUAL),
+        allowNull: false,
+      },
+      principal: {
+        type: Sequelize.REAL,
+        allowNull: false,
+      },
+      startDate: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+
+      contract: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
     });
 
     return Increment;

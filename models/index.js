@@ -14,6 +14,9 @@ const sequelize = new Sequelize(
 // );
 
 const UserModel = require("./User.model");
+const AvailableCreditModel = require("./AvailableCredit.model");
+const BalanceUpdateLogModel = require("./BalanceUpdateLog");
+const TotalPaidModel = require("./TotalPaid.model");
 const AccountModel = require("./Account.model");
 
 const NotificationModel = require("./Notification.model");
@@ -25,6 +28,10 @@ const EarnedModel = require("./Earned.model");
 
 const User = UserModel(sequelize, Sequelize);
 const Account = AccountModel(sequelize, Sequelize);
+
+const AvailableCredit = AvailableCreditModel(sequelize, Sequelize);
+const BalanceUpdateLog = BalanceUpdateLogModel(sequelize, Sequelize);
+const TotalPaid = TotalPaidModel(sequelize, Sequelize);
 
 const Earned = EarnedModel(sequelize, Sequelize);
 const Investment = InvestmentModel(sequelize, Sequelize);
@@ -45,11 +52,24 @@ User.hasOne(Investment);
 Earned.belongsTo(User);
 User.hasMany(Earned);
 
+
+User.hasMany(TotalPaid);
+TotalPaid.belongsTo(User);
+User.hasOne(AvailableCredit);
+AvailableCredit.belongsTo(User);
+User.hasMany(BalanceUpdateLog);
+BalanceUpdateLog.belongsTo(User);
+
 Investment.hasMany(Increment);
+
 Increment.belongsTo(Investment);
+
+
 
 User.hasMany(Increment);
 Increment.belongsTo(User);
+Increment.belongsTo(User);
+
 
 Transaction.belongsTo(User);
 User.hasMany(Transaction);
@@ -74,4 +94,10 @@ module.exports = {
   Payout,
   Notification,
   Earned,
+  AvailableCredit,
+  BalanceUpdateLog,
+  TotalPaid,
 };
+
+
+// Generate crud api controllers  for AvailableCredit, BalanceUpdateLog, TotalPaid. These are sequalize database models

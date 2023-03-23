@@ -79,20 +79,7 @@ class Mailer {
     return mailOptions;
   }
 
-  async getDepositInfoMail(user, amount) {
 
-
-    const mailOptions = {
-      from: process.env.ADMIN_EMAIL,
-      to: user.email,
-      subject: 'Nuovo deposito',
-      text:
-        `Utente ${user.first_name} ${user.last_name} (${user.email})\n\n` +
-        `ha depositato ${amount}`,
-    };
-
-    return mailOptions;
-  }
 
   async getDepositInfoMailToAdmin(user, amount) {
     const mailOptions = {
