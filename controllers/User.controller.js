@@ -5,10 +5,7 @@ const crypto = require("crypto");
 const Mailer = require("../utils/mailer");
 const addrs = require("email-addresses");
 const { use } = require("passport");
-const { GetResponse } = require("api-getresponse");
-let gr = new GetResponse({
-  apiKey: "414slk9430ca4b917twt2vkw5xuvugi3",
-});
+
 async function hashPassword(plainTextPassword) {
   return await bcrypt.hash(plainTextPassword, 10);
 }
@@ -46,7 +43,7 @@ exports.login = function (req, res, next) {
 
 exports.register = async function (req, res) {
   const user = await User.findOne({ where: { email: req.body.email } });
-  if (user) res.send("User Already Exists");
+  if (user) res.status(402).send("User Already Exists");
   if (!user) {
     try {
       const hashedPassword = await hashPassword(req.body.password);
@@ -64,11 +61,7 @@ exports.register = async function (req, res) {
         balance: 0.0,
         userId: user.id,
       });
- await gr.addContact({
-        name: `${req.body.first_name} ${req.body.last_name}`,
-        email: `${req.body.email}`,
-        token: "Z72yr",
-      });
+
 
       return res.send("success");
     } catch (error) {
@@ -76,12 +69,7 @@ exports.register = async function (req, res) {
       return res.status(404).send(error.message);
     }
 
-    //   .then((ok) => {
-    //     if (ok)
-    //   })
-    //   .catch((err) => {
-    //
-    //   });
+
   }
 };
 
@@ -194,8 +182,8 @@ exports.updateInfo = async function (req, res) {
     );
 
     try {
-      await mailer.sendMailSync(documentVerificationEmail);
-
+ const resEmail= await mailer.sendMailSync(documentVerificationEmail);
+   console.log(resEmail); 
       res.send({ message: "User updated successfully" });
     } catch (error) {
       const errorString = `Error sending email: ${error}`;
