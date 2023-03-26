@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 
 // const sequelize = new Sequelize('sqlite::memory:', { logging: false });
 
-const sequelize = new Sequelize(
+ const sequelize = new Sequelize(
   "postgres://postgres:1234@localhost:5432/delance",
   { logging: false }
 );
@@ -97,6 +97,7 @@ module.exports = {
   AvailableCredit,
   BalanceUpdateLog,
   TotalPaid,
+  sequelize,
 };
 
 
