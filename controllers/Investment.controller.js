@@ -4,7 +4,7 @@ const Joi = require('joi');
 const plans = require("../constants/plans");
 const { daysUntilNextPayout, payoutForIncrement } = require("../helpers/interest");
 const { chunks } = require("../helpers/utils");
-
+const Mailer = require("../utils/mailer");
 const schema = Joi.object().keys({
   plan: Joi.string().valid(plans.BIMONTHLY, plans.SEMIANNUAL).required(),
   amount: Joi.number().required(),
@@ -228,82 +228,18 @@ exports.list = async function (req, res) {
 
 
 exports.reinvest = async function (req, res) {
-  var account = await Account.findOne({
-    where: {
-      userId: req.user.id,
-    },
-  });
+    try {
+      const mailer = new Mailer();
 
-  const validBody = schema.validate(req.body);
+      const depositInfoEmailToAdmin = await mailer.getReDepositInfoMailToAdmin(
+        req.user,
+        req.body.amount,
+        req.body.contract
+      );
 
-  if (validBody.error == null) {
-    if (req.body.amount <= account.availableCredit) {
-      var investment = await Investment.findOne({
-        where: { userId: req.user.id },
-      });
-
-      if (investment == null) {
-        res.status(400).send({
-          message: "User has no investment yet. Please create one first",
-        });
-
-        return;
-      }
-      await Earned.create({
-        plan: req.body.plan,
-        principal: parseFloat(req.body.amount),
-        startDate: new Date(),
-        userId: req.user.id,
-        investmentId: investment.id,
-      });
-      const today = new Date();
-      const daysElapsed = moment(new Date()).diff(investment.createdAt, "days");
-      const increments = await Increment.findAll({
-        order: [["createdAt", "ASC"]],
-        where: { userId: req.user.id },
-      });
-
-      if (increments.length == 1 && daysElapsed <= 15) {
-        // If the user has only made a single investment
-        // and less than 15 days have passed update the
-        // first increment's principal, plan and start
-        // date
-        const firstIncrement = increments[0];
-
-        await firstIncrement.update({
-          plan: req.body.plan,
-          principal: firstIncrement.principal + parseFloat(req.body.amount),
-          startDate: today,
-        });
-      } else {
-        // If more than 15 days have elapsed or the user
-        // has more than a single increment create a new
-        // increment with the invested amount as the principal
-        await Increment.create({
-          plan: req.body.plan,
-          principal: parseFloat(req.body.amount),
-          startDate: new Date(),
-          userId: req.user.id,
-          investmentId: investment.id,
-        });
-      }
-
-      await Account.decrement("availableCredit", {
-        by: req.body.amount,
-        where: { userId: req.user.id },
-      });
-
-      res.send({
-        message: "success",
-      });
-    } else {
-      res.status(400).send({
-        message: "not enough available credit for reinvet",
-      });
+      await mailer.sendMailSync(depositInfoEmailToAdmin);
+      return res.status(201).send("success");
+    } catch (error) {
+      return res.status(500).send(error.message);
     }
-  } else {
-    res.status(400).send({
-      message: "invalid payload",
-    });
-  }
 };
