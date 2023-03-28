@@ -3,40 +3,51 @@ const { Op } = require("sequelize");
 const { TotalPaid, sequelize } = require("../models");
 const TotalPaidController = {
   getAll: async (req, res) => {
-const getMonthlyBalance = async (year, month, userId, contract) => {
-  const startDate = new Date(year, 0, 1);
-  const endDate = new Date(year, 11, 31);
-  console.log("startDate:", startDate);
-  console.log("endDate:", endDate);
 
-  const result = await TotalPaid.findAll({
-    attributes: [
-      [sequelize.fn("DATE_TRUNC", "month", sequelize.col("date")), "month"],
-      [sequelize.fn("SUM", sequelize.col("totalPaid")), "totalPaid"],
-    ],
-    where: {
-      userId,
-      contract,
-      date: {
-        [Op.between]: [startDate, endDate],
-      },
-    },
-    raw: true,
-    group: sequelize.literal(`DATE_TRUNC('month', "date")`),
-  });
+    try {
+        const getMonthlyBalance = async (year, month, userId, contract) => {
+          try {
+          } catch (error) {}
+          const startDate = new Date(year, 0, 1);
+          const endDate = new Date(year, 11, 31);
 
-  return result;
-};
+          const result = await TotalPaid.findAll({
+            attributes: [
+              [
+                sequelize.fn("DATE_TRUNC", "month", sequelize.col("date")),
+                "month",
+              ],
+              [sequelize.fn("SUM", sequelize.col("totalPaid")), "totalPaid"],
+            ],
+            where: {
+              userId,
+              contract,
+              date: {
+                [Op.between]: [startDate, endDate],
+              },
+            },
+            raw: true,
+            group: sequelize.literal(`DATE_TRUNC('month', "date")`),
+          });
 
-const data = await getMonthlyBalance(
-  new Date(req.body.year).getFullYear(),
+          return result;
+        };
 
-  1,
-  req?.user?.id,
-  req.body.contract
-);
+        const data = await getMonthlyBalance(
+          new Date(req.body.year).getFullYear(),
 
-res.send(data);
+          1,
+          req?.user?.id,
+          req.body.contract
+        );
+
+      return  res.send(data);
+    } catch (error) {
+      return res.json({
+        message:error.message
+      }); 
+    }
+  
   },
 
 
