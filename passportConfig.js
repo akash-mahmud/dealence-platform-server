@@ -33,7 +33,8 @@ module.exports = function (passport) {
       phone_number: user.phone_number,
       isContractSigned: user.isContractSigned,
       isDocumentUploaded: user.isDocumentUploaded,
-      isActive: user.isActive
+      isActive: user.isActive,
+      contracts: user.contracts
     };
     cb(null, userInformation);
   });

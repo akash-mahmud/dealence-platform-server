@@ -39,6 +39,8 @@ const TotalPaidController = {
           1,
           req?.user?.id,
           req.body.contract
+            ? req.body.contract
+            : req?.user?.contracts?.split(",")[0]
         );
 
       return  res.send(data);
