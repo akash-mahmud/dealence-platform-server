@@ -5,7 +5,7 @@ const {
 const { checkAuthentication } = require("../middleware/Auth");
 const router = express.Router();
 
-router.get("/", BalanceUpdateLogController.getAll);
+router.post("/chart", BalanceUpdateLogController.getAllChart);
 router.get("/:id", BalanceUpdateLogController.getById);
 router.post("/", BalanceUpdateLogController.create);
 router.patch("/:id", BalanceUpdateLogController.updateById);

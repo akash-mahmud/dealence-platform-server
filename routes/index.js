@@ -5,6 +5,7 @@ const transactionRoutes = require("./transaction");
 const investmentRoutes = require("./investment");
 const availablecreditRoutes = require("./availablecredit");
 const totalpaidRoutes = require("./totalpaid");
+const conractRoutes = require("./contract");
 const balanceUpdateLogRoutes = require("./balanceUpdateLog");
 const PaypalController = require("../controllers/Paypal.controller");
 const router = express.Router();
@@ -14,6 +15,7 @@ router.get("/", (req, res) => {
 });
 
 router.use("/account", accountRoutes);
+router.use("/contract", conractRoutes);
 router.use("/user", userRoutes);
 router.use("/transaction", transactionRoutes);
 router.use("/investment", investmentRoutes);

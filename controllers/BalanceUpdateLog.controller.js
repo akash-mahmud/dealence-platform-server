@@ -1,10 +1,47 @@
-const { BalanceUpdateLog } = require("../models");
+const { Sequelize, Op } = require("sequelize");
+const { BalanceUpdateLog, sequelize } = require("../models");
 
 // define CRUD API controllers for BalanceUpdateLog model
 const BalanceUpdateLogController = {
-  getAll: async (req, res) => {
-    const balanceUpdateLogs = await BalanceUpdateLog.findAll();
-    res.json(balanceUpdateLogs);
+  getAllChart: async (req, res) => {
+
+const getMonthlyBalance = async (year, month, userId, contract) => {
+
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year, 11, 31);
+  console.log("startDate:", startDate);
+  console.log("endDate:", endDate);
+
+  const result = await BalanceUpdateLog.findAll({
+    attributes: [
+      [sequelize.fn("DATE_TRUNC", "month", sequelize.col("date")), "month"],
+      [sequelize.fn("SUM", sequelize.col("balance")), "investment"],
+    ],
+    where: {
+      userId,
+      contract,
+      date: {
+        [Op.between]: [startDate, endDate],
+      },
+    },
+    raw: true,
+    group: sequelize.literal(`DATE_TRUNC('month', "date")`),
+  });
+
+
+
+  return result;
+};
+
+    const data = await getMonthlyBalance(
+      new Date(req.body.year).getFullYear(),
+
+      1,
+      req?.user?.id,
+      req.body.contract
+    );
+console.log(data);
+    res.send(data)
   },
 
   getById: async (req, res) => {

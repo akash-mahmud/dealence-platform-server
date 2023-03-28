@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 class Mailer {
   constructor() {
     this.transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
         user: process.env.ADMIN_EMAIL,
         pass: process.env.ADMIN_EMAIL_PASSWORD,
@@ -15,12 +15,12 @@ class Mailer {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: toEmail,
-      subject: 'Password reset link',
+      subject: "Password reset link",
       text:
-        'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-        'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n' +
+        "You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
+        "Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n" +
         `${process.env.PRODUCTION}/reset?token=${token} \n\n` +
-        'If you did not request this, please ignore this email and your password will remain unchanged. \n',
+        "If you did not request this, please ignore this email and your password will remain unchanged. \n",
     };
 
     return mailOptions;
@@ -41,7 +41,7 @@ class Mailer {
       `</ul>\n\n` +
       `La copia fronte e retro di un documento è allegata a questa email `;
 
-    const fileType = await import('file-type');
+    const fileType = await import("file-type");
 
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
@@ -55,7 +55,7 @@ class Mailer {
             fileType
           )}`,
           content: idFront,
-          encoding: 'base64',
+          encoding: "base64",
         },
         {
           filename: `id_retro.${await this.getBase64Extension(
@@ -63,7 +63,7 @@ class Mailer {
             fileType
           )}`,
           content: idBack,
-          encoding: 'base64',
+          encoding: "base64",
         },
         {
           filename: `proofAddress.${await this.getBase64Extension(
@@ -71,7 +71,7 @@ class Mailer {
             fileType
           )}`,
           content: proofOfAddress,
-          encoding: 'base64',
+          encoding: "base64",
         },
       ],
     };
@@ -79,13 +79,11 @@ class Mailer {
     return mailOptions;
   }
 
-
-
   async getDepositInfoMailToAdmin(user, amount) {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: process.env.ADMIN_EMAIL,
-      subject: 'Nuovo deposito',
+      subject: "Nuovo deposito",
       text:
         `Utente ${user.first_name} ${user.last_name} (${user.email})\n\n` +
         `ha depositato ${amount}`,
@@ -93,7 +91,18 @@ class Mailer {
 
     return mailOptions;
   }
+  async getReDepositInfoMailToAdmin(user, amount, contract) {
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: process.env.ADMIN_EMAIL,
+      subject: "Nuovo deposito",
+      text:
+        `Utente ${user.first_name} ${user.last_name} (${user.email})\n\n` +
+        `ha reinvesto ${amount} sul presente contratto: ${contract}`,
+    };
 
+    return mailOptions;
+  }
   async getWithdrawInfoMail(
     user,
     withdrawNameFull,
@@ -106,7 +115,7 @@ class Mailer {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: user.email,
-      subject: 'Nuovo prelievo',
+      subject: "Nuovo prelievo",
       text:
         `Utente ${withdrawNameFull}  (${user.email})\n\n` +
         `bankName: ${bankName} ha depositato swift/bic: ${swift} \n\n
@@ -129,7 +138,7 @@ class Mailer {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: process.env.ADMIN_EMAIL,
-      subject: 'Nuovo prelievo',
+      subject: "Nuovo prelievo",
       text:
         `Utente ${withdrawNameFull}  (${user.email})\n\n` +
         `bankName: ${bankName} ha depositato swift/bic: ${swift} \n\n
@@ -144,7 +153,7 @@ class Mailer {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: user.email,
-      subject: 'Nuovo prelievo',
+      subject: "Nuovo prelievo",
       text:
         `Utente ${user.first_name}  (${user.email})\n\n` +
         `ha prelevato ${amount} crypto: ${crypto} cryptoAddress: ${cryptoAddress}`,
@@ -157,7 +166,7 @@ class Mailer {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: process.env.ADMIN_EMAIL,
-      subject: 'Nuovo prelievo',
+      subject: "Nuovo prelievo",
       text:
         `Utente ${user.first_name} ${user.last_name} (${user.email})\n\n` +
         `ha prelevato ${amount} crypto: ${crypto} cryptoAddress: ${cryptoAddress}`,
@@ -167,7 +176,7 @@ class Mailer {
   }
   async getBase64Extension(base64Data, fileType) {
     const mime = await fileType.fileTypeFromBuffer(
-      await Buffer.from(base64Data, 'base64')
+      await Buffer.from(base64Data, "base64")
     );
     return mime.ext;
   }

@@ -1,9 +1,42 @@
 // define CRUD API controllers for TotalPaid model
-const { TotalPaid } = require("../models");
+const { Op } = require("sequelize");
+const { TotalPaid, sequelize } = require("../models");
 const TotalPaidController = {
   getAll: async (req, res) => {
-    const totalPaids = await TotalPaid.findAll();
-    res.json(totalPaids);
+const getMonthlyBalance = async (year, month, userId, contract) => {
+  const startDate = new Date(year, 0, 1);
+  const endDate = new Date(year, 11, 31);
+  console.log("startDate:", startDate);
+  console.log("endDate:", endDate);
+
+  const result = await TotalPaid.findAll({
+    attributes: [
+      [sequelize.fn("DATE_TRUNC", "month", sequelize.col("date")), "month"],
+      [sequelize.fn("SUM", sequelize.col("totalPaid")), "totalPaid"],
+    ],
+    where: {
+      userId,
+      contract,
+      date: {
+        [Op.between]: [startDate, endDate],
+      },
+    },
+    raw: true,
+    group: sequelize.literal(`DATE_TRUNC('month', "date")`),
+  });
+
+  return result;
+};
+
+const data = await getMonthlyBalance(
+  new Date(req.body.year).getFullYear(),
+
+  1,
+  req?.user?.id,
+  req.body.contract
+);
+
+res.send(data);
   },
 
 

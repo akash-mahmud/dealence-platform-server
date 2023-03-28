@@ -5,7 +5,7 @@ const {
 const { checkAuthentication } = require("../middleware/Auth");
 const router = express.Router();
 
-router.get("/", TotalPaidController.getAll);
+router.post("/chart", TotalPaidController.getAll); 
 router.get("/:id", TotalPaidController.getById);
 router.post("/", TotalPaidController.create);
 router.patch("/:id", TotalPaidController.updateById);
