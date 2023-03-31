@@ -41,26 +41,26 @@ exports.deposit = async function (req, res) {
 
 exports.withdraw = async function (req, res) {
   try {
-    const withdrawAmount = parseFloat(req.body.withdrawAmount);
+
 
     var account = await Account.findOne({
       where: {
         userId: req.user.id,
       },
     });
-    if (withdrawAmount <= account.availableCredit) {
+
 
       const mailer = new Mailer();
-      let depositInfoEmail = await mailer.getWithdrawInfoMail(
-        req.user,
-        req.body.withdrawNameFull,
-        req.body.bankName,
-        req.body.swift,
-        req.body.withdrawEmail,
+      // let depositInfoEmail = await mailer.getWithdrawInfoMail(
+      //   req.user,
+      //   req.body.withdrawNameFull,
+      //   req.body.bankName,
+      //   req.body.swift,
+      //   req.body.withdrawEmail,
 
-        withdrawAmount,
-        req.body.iban
-      );
+      //   withdrawAmount,
+      //   req.body.iban
+      // );
 
       let depositInfoEmailAdmin = await mailer.getWithdrawInfoMailAdmin(
         req.user,
@@ -69,19 +69,19 @@ exports.withdraw = async function (req, res) {
         req.body.swift,
         req.body.withdrawEmail,
 
-        withdrawAmount,
+        req.body.withdrawAmount,
         req.body.iban
       );
 
-      await mailer.sendMailSync(depositInfoEmail);
+      // await mailer.sendMailSync(depositInfoEmail);
 
       await mailer.sendMailSync(depositInfoEmailAdmin);
 
       return res.status(201).send("success");
-    } else {
-      res.send("Not enough balance");
-    }
-  } catch (error) {}
+    
+  } catch (error) {
+      return res.status(201).send(error.message);
+  }
 };
 
 
