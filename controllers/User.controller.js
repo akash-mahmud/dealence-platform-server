@@ -43,7 +43,7 @@ exports.login = function (req, res, next) {
 
 exports.register = async function (req, res) {
   const user = await User.findOne({ where: { email: req.body.email } });
-  if (user) res.status(402).send("User Already Exists");
+  if (user) res.send("exist");
   if (!user) {
     try {
       const hashedPassword = await hashPassword(req.body.password);

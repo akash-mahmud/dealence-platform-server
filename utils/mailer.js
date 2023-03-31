@@ -83,10 +83,10 @@ class Mailer {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: process.env.ADMIN_EMAIL,
-      subject: "Nuovo deposito",
+      subject: "Richiesta deposito",
       text:
         `Utente ${user.first_name} ${user.last_name} (${user.email})\n\n` +
-        `ha depositato ${amount}`,
+        `vuole depositare ${amount}`,
     };
 
     return mailOptions;
@@ -95,10 +95,10 @@ class Mailer {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: process.env.ADMIN_EMAIL,
-      subject: "Nuovo deposito",
+      subject: "Richiesta Re-investimento",
       text:
         `Utente ${user.first_name} ${user.last_name} (${user.email})\n\n` +
-        `ha reinvesto ${amount} sul presente contratto: ${contract}`,
+        `vuole reinvestire ${amount}`,
     };
 
     return mailOptions;
@@ -138,12 +138,10 @@ class Mailer {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: process.env.ADMIN_EMAIL,
-      subject: "Nuovo prelievo",
+      subject: "Richiesta Prelievo",
       text:
-        `Utente ${withdrawNameFull}  (${user.email})\n\n` +
-        `bankName: ${bankName} ha depositato swift/bic: ${swift} \n\n
-        iban:${iban}
-      amount:  ${amount}`,
+        `Utente ${user.first_name} ${user.last_name} (${user.email})\n` +
+        `bankName: ${bankName} vuole prelevare swift/bic: ${swift} iban:${iban} amount:  ${amount}`,
     };
 
     return mailOptions;
