@@ -212,11 +212,12 @@ exports.list = async function (req, res) {
     incrementsJSON.push({
       id: increment.id,
       createdAt: moment(increment.createdAt).format("DD/MM/YYYY"),
+      startDate: moment(increment.startDate).format("DD/MM/YYYY"),
       plan: increment.plan,
       principal: increment.principal,
       daysUntilPayout: daysUntilNextPayout(increment),
-      interest: payoutForIncrement(increment).toFixed(2)
-    })
+      interest: payoutForIncrement(increment).toFixed(2),
+    });
   }
 
   let pages = chunks(incrementsJSON, parseInt(process.env.INVESTMENTS_ITEMS_PER_PAGE));
