@@ -33,10 +33,23 @@ exports.login = function (req, res, next) {
     if (err) throw err;
     if (!user) res.send("No User Exists");
     else {
-      req.logIn(user, (err) => {
-        if (err) throw err;
-        res.send("success");
-      });
+      if (user?.status ==='active') {
+        req.logIn(user, (err) => {
+          if (err) throw err;
+          res.send("success");
+        });
+      }else{
+        res.status(402).json({message:`Gentile Titolare dell'Account Dealence, 
+        Il suo account è stato limitato, poiché è scaduto il termine di 7 giorni per indicare l'entità del Deposito che avrebbe intenzione di effettuare. 
+        Per sbloccare il profilo, completare l'iter di iscrizione ed iniziare ad usufruire dei nostri servizi, ci contatti ai seguenti indirizzi:
+        Tel. Mobile +41 0798421775 (Svizzera) +39 3716917543 (Italia)
+        E-mail support@dealence.com
+        
+        Cordiali saluti,
+        Il Team di Dealence`});
+
+      }
+
     }
   })(req, res, next);
 };
@@ -55,6 +68,7 @@ exports.register = async function (req, res) {
         phone_number: req.body.phone_number,
         referrer_code: req.body.referrer_code,
         password: hashedPassword,
+        status:'active'
       });
 
       await Account.create({

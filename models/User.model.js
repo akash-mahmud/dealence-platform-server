@@ -60,6 +60,10 @@ module.exports = (sequelize, Sequelize) => {
         defaultValue: false,
         allowNull: false,
       },
+      status: {
+        type: Sequelize.STRING,
+        defaultValue:'active'
+      },
       resetPasswordToken: {
         type: Sequelize.STRING,
       },
