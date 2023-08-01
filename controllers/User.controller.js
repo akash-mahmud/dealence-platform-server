@@ -39,14 +39,8 @@ exports.login = function (req, res, next) {
           res.send("success");
         });
       }else{
-        res.status(402).json({message:`Gentile Titolare dell'Account Dealence, 
-        Il suo account è stato limitato, poiché è scaduto il termine di 7 giorni per indicare l'entità del Deposito che avrebbe intenzione di effettuare. 
-        Per sbloccare il profilo, completare l'iter di iscrizione ed iniziare ad usufruire dei nostri servizi, ci contatti ai seguenti indirizzi:
-        Tel. Mobile +41 0798421775 (Svizzera) +39 3716917543 (Italia)
-        E-mail support@dealence.com
-        
-        Cordiali saluti,
-        Il Team di Dealence`});
+        res.status(402).json({
+        message:'restricted'});
 
       }
 
