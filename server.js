@@ -7,13 +7,10 @@ const expressSession = require("express-session");
 const db = require("./models");
 const router = require("./routes");
 
-
-
 require("dotenv").config();
 
 const app = express();
 app.use(morgan("dev"));
-
 
 app.use(bodyParser.urlencoded({ limit: "100mb" }));
 app.use(bodyParser.json({ limit: "100mb" }));
@@ -33,13 +30,11 @@ app.use(
   })
 );
 
-
 app.use(
   expressSession({
     secret: "dealence",
     resave: true,
     saveUninitialized: true,
-    
   })
 );
 
@@ -49,10 +44,8 @@ require("./passportConfig")(passport);
 
 app.use("/api", router);
 
-
-
 const port = process.env.PORT || 4000;
 
-app.listen(port, async () => {});
-
-
+app.listen(port, async () => {
+  console.log(`Server started at http://localhost:${port}`);
+});

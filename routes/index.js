@@ -7,6 +7,7 @@ const availablecreditRoutes = require("./availablecredit");
 const totalpaidRoutes = require("./totalpaid");
 const conractRoutes = require("./contract");
 const balanceUpdateLogRoutes = require("./balanceUpdateLog");
+const buisnessSectionRoutes = require("./buisnessSection");
 const PaypalController = require("../controllers/Paypal.controller");
 const router = express.Router();
 
@@ -23,4 +24,5 @@ router.use("/availablecredit", availablecreditRoutes);
 router.use("/totalpaid", totalpaidRoutes);
 router.use("/balanceUpdateLog", balanceUpdateLogRoutes);
 router.use("/api/config/paypal", PaypalController);
+router.use("/buisness-section", buisnessSectionRoutes);
 module.exports = router;

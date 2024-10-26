@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Thehawk server CD
+name: Delance Platform server CD
 
 # Controls when the action will run. 
 on:
@@ -27,8 +27,8 @@ jobs:
         port: 22
         script: |
           cd dealence-platform-server
-          sudo git pull origin master
-          sudo git status
+          git pull origin master
+          git status
           sudo rm .env
 
           echo "${{ secrets.ENV_FILE }}" | sudo tee -a .env
