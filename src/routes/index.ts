@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 const express = require("express");
 const userRoutes = require("./user");
 const accountRoutes = require("./account");
+import adminRoutes from './admin'
 const transactionRoutes = require("./transaction");
 const investmentRoutes = require("./investment");
 const availablecreditRoutes = require("./availablecredit");
@@ -18,6 +19,7 @@ router.get("/", (req:Request, res:Response) => {
 });
 
 router.use("/account", accountRoutes);
+router.use("/admin", adminRoutes);
 router.use("/contract", conractRoutes);
 router.use("/user", userRoutes);
 router.use("/transaction", transactionRoutes);

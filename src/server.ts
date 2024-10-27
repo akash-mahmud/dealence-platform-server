@@ -43,7 +43,6 @@ app.use(passport.session());
 require("./passportConfig")(passport);
 
 app.use("/api", router);
-app.use("/admin", router);
 
 const port = process.env.PORT || 4000;
 
