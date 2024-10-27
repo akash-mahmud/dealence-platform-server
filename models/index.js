@@ -25,10 +25,11 @@ const IncrementModel = require("./Increment.model");
 const TransactionModel = require("./Transaction.model");
 const PayoutModel = require("./Payout.model");
 const EarnedModel = require("./Earned.model");
+const BuisnessSectionModel = require("./BuisnessSectionModel");
 
 const User = UserModel(sequelize, Sequelize);
 const Account = AccountModel(sequelize, Sequelize);
-
+const BuisnessSection = BuisnessSectionModel(sequelize, Sequelize)
 const AvailableCredit = AvailableCreditModel(sequelize, Sequelize);
 const BalanceUpdateLog = BalanceUpdateLogModel(sequelize, Sequelize);
 const TotalPaid = TotalPaidModel(sequelize, Sequelize);
@@ -98,6 +99,7 @@ module.exports = {
   BalanceUpdateLog,
   TotalPaid,
   sequelize,
+  BuisnessSection
 };
 
 
