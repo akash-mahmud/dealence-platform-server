@@ -19,7 +19,6 @@ const BalanceUpdateLogModel = require("./BalanceUpdateLog");
 const TotalPaidModel = require("./TotalPaid.model");
 const AccountModel = require("./Account.model");
 
-const NotificationModel = require("./Notification.model");
 const InvestmentModel = require("./Investment.model");
 const IncrementModel = require("./Increment.model");
 const TransactionModel = require("./Transaction.model");
@@ -39,13 +38,10 @@ const Investment = InvestmentModel(sequelize, Sequelize);
 const Increment = IncrementModel(sequelize, Sequelize);
 const Transaction = TransactionModel(sequelize, Sequelize);
 const Payout = PayoutModel(sequelize, Sequelize);
-const Notification = NotificationModel(sequelize, Sequelize);
 
 Account.belongsTo(User);
 User.hasOne(Account);
 
-Notification.belongsTo(User);
-User.hasOne(Notification);
 
 Investment.belongsTo(User);
 User.hasOne(Investment);
@@ -86,14 +82,13 @@ User.hasMany(Increment);
 
 sequelize.sync().then(() => {});
 
-module.exports = {
+export = {
   User,
   Transaction,
   Investment,
   Increment,
   Account,
   Payout,
-  Notification,
   Earned,
   AvailableCredit,
   BalanceUpdateLog,

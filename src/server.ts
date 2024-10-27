@@ -1,11 +1,11 @@
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const bodyParser = require("body-parser");
-const passport = require("passport");
-const expressSession = require("express-session");
-const db = require("./models");
-const router = require("./routes");
+import express from 'express'
+import cors from "cors";
+import morgan from "morgan";
+import bodyParser from "body-parser";
+import passport from "passport";
+import expressSession from "express-session";
+import _ from "./models";
+import router from './routes';
 
 require("dotenv").config();
 
@@ -43,6 +43,7 @@ app.use(passport.session());
 require("./passportConfig")(passport);
 
 app.use("/api", router);
+app.use("/admin", router);
 
 const port = process.env.PORT || 4000;
 

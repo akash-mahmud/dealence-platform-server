@@ -1,3 +1,5 @@
+import { Request, Response } from "express";
+
 const express = require("express");
 const userRoutes = require("./user");
 const accountRoutes = require("./account");
@@ -11,7 +13,7 @@ const buisnessSectionRoutes = require("./buisnessSection");
 const PaypalController = require("../controllers/Paypal.controller");
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", (req:Request, res:Response) => {
   res.send("API is Running 🏃‍♂️");
 });
 
@@ -25,4 +27,4 @@ router.use("/totalpaid", totalpaidRoutes);
 router.use("/balanceUpdateLog", balanceUpdateLogRoutes);
 router.use("/api/config/paypal", PaypalController);
 router.use("/buisness-section", buisnessSectionRoutes);
-module.exports = router;
+export default router;
