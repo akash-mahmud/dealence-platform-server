@@ -1,22 +1,35 @@
 import express from "express";
+import { verifiedController } from "../../../controllers/admin/user.verified.controller";
+const {
+  getAllVerifiedUsers,
+  getUserPlanBalanceDetails,
+  getUserPlanIncrementDetails,
+  getUserBalanceLogs,
+  getUserAvailableCreditDetails,
+  getUserTotalPaidDetails,
+  getUserAvilablecredits,
+  getUserPlansDetails,
+  deleteAvailablecredit,
+  deleteUserBalanceLog,
+  deleteUserTotalPaid,
+  deleteUsersPlan,
+} = verifiedController;
+const verifiedUserRoutes = express.Router();
 
-const verifiedUserRoutes = express.Router()
+verifiedUserRoutes.get("/", getAllVerifiedUsers);
+verifiedUserRoutes.get("/plans/:id", getUserPlansDetails);
+verifiedUserRoutes.get("/plan/:id/:increamentId", getUserPlanIncrementDetails);
+verifiedUserRoutes.get("/planbalance/:balanceId", getUserPlanBalanceDetails);
+verifiedUserRoutes.get(
+  "/availablecredit/:creditId",
+  getUserAvailableCreditDetails
+);
+verifiedUserRoutes.get("/balancelogs/:id", getUserBalanceLogs);
+verifiedUserRoutes.get("/totalpaids/:id", getUserTotalPaidDetails);
+verifiedUserRoutes.get("/availablecredits/:id", getUserAvilablecredits);
+verifiedUserRoutes.delete("/plan/delete/:id", deleteUsersPlan);
+verifiedUserRoutes.delete("/balancelog/delete/:id", deleteUserBalanceLog);
+verifiedUserRoutes.delete("totalpaid/delete/:id", deleteUserTotalPaid);
+verifiedUserRoutes.delete("/availablecredit/delete/:id", deleteAvailablecredit);
 
-verifiedUserRoutes.get("/plans/:id")
-verifiedUserRoutes.get("/plan/:id/:increamentId")
-verifiedUserRoutes.get("/planbalance/:balanceId")
-verifiedUserRoutes.get("/availablecredit/:creditId")
-verifiedUserRoutes.get("/balancelogs/:id")
-verifiedUserRoutes.get("/totalpaids/:id")
-verifiedUserRoutes.get("/availablecredits/:id")
-verifiedUserRoutes.get("/plan/delete/:id")
-verifiedUserRoutes.get("/balancelog/delete/:id")
-verifiedUserRoutes.get("totalpaid/delete/:id")
-verifiedUserRoutes.get("/availablecredit/delete/:id")
-verifiedUserRoutes.get("/availablecredit/delete/:id")
-verifiedUserRoutes.get("/availablecredit/delete/:id")
-verifiedUserRoutes.get("/availablecredit/delete/:id")
-
-export {
-    verifiedUserRoutes 
-}
+export { verifiedUserRoutes };

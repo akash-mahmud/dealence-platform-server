@@ -4,7 +4,7 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 import passport from "passport";
 import expressSession from "express-session";
-import _ from "./models";
+import * as  _ from "./models";
 import router from './routes';
 
 require("dotenv").config();

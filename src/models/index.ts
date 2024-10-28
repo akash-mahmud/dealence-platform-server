@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+import {Sequelize}  from "sequelize";
 
 // const sequelize = new Sequelize('sqlite::memory:', { logging: false });
 
@@ -82,7 +82,7 @@ User.hasMany(Increment);
 
 sequelize.sync().then(() => {});
 
-export = {
+export {
   User,
   Transaction,
   Investment,

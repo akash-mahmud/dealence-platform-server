@@ -1,6 +1,17 @@
-const nodemailer = require("nodemailer");
+import nodemailer, { Transporter } from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 class Mailer {
+  getUpAprooveInfoMail(user: any) {
+    throw new Error("Method not implemented.");
+  }
+  getUpDAteInfoMail(user: any) {
+    throw new Error("Method not implemented.");
+  }
+  transporter: Transporter<
+    SMTPTransport.SentMessageInfo,
+    SMTPTransport.Options
+  >;
   constructor() {
     this.transporter = nodemailer.createTransport({
       service: "gmail",
@@ -11,7 +22,7 @@ class Mailer {
     });
   }
 
-  getPasswordRecoveryMail(toEmail, token) {
+  getPasswordRecoveryMail(toEmail: string, token: string) {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: toEmail,
@@ -26,7 +37,12 @@ class Mailer {
     return mailOptions;
   }
 
-  async getDocumentVerificationMail(user, idFront, idBack, proofOfAddress) {
+  async getDocumentVerificationMail(
+    user: any,
+    idFront: any,
+    idBack: any,
+    proofOfAddress: any
+  ) {
     const text =
       `L'utente ha richiesto la verifica del profilo ed ha inserito le seguenti informazioni: \n\n` +
       `<ul>\n` +
@@ -79,7 +95,7 @@ class Mailer {
     return mailOptions;
   }
 
-  async getDepositInfoMailToAdmin(user, amount) {
+  async getDepositInfoMailToAdmin(user: any, amount: any) {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: process.env.ADMIN_EMAIL,
@@ -91,7 +107,7 @@ class Mailer {
 
     return mailOptions;
   }
-  async getReDepositInfoMailToAdmin(user, amount, contract) {
+  async getReDepositInfoMailToAdmin(user: any, amount: any, contract: any) {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: process.env.ADMIN_EMAIL,
@@ -104,13 +120,13 @@ class Mailer {
     return mailOptions;
   }
   async getWithdrawInfoMail(
-    user,
-    withdrawNameFull,
-    bankName,
-    swift,
-    withdrawEmail,
-    amount,
-    iban
+    user: any,
+    withdrawNameFull: any,
+    bankName: any,
+    swift: any,
+    withdrawEmail: any,
+    amount: any,
+    iban: any
   ) {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
@@ -127,13 +143,13 @@ class Mailer {
   }
 
   async getWithdrawInfoMailAdmin(
-    user,
-    withdrawNameFull,
-    bankName,
-    swift,
-    withdrawEmail,
-    amount,
-    iban
+    user: any,
+    withdrawNameFull: any,
+    bankName: any,
+    swift: any,
+    withdrawEmail: any,
+    amount: any,
+    iban: any
   ) {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
@@ -147,7 +163,12 @@ class Mailer {
     return mailOptions;
   }
 
-  async getWithdrawInfoMailForCrypto(user, amount, crypto, cryptoAddress) {
+  async getWithdrawInfoMailForCrypto(
+    user: any,
+    amount: any,
+    crypto: any,
+    cryptoAddress: any
+  ) {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: user.email,
@@ -160,7 +181,12 @@ class Mailer {
     return mailOptions;
   }
 
-  async getWithdrawInfoMailForCryptoAdmin(user, amount, crypto, cryptoAddress) {
+  async getWithdrawInfoMailForCryptoAdmin(
+    user: any,
+    amount: any,
+    crypto: any,
+    cryptoAddress: any
+  ) {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: process.env.ADMIN_EMAIL,
@@ -172,18 +198,18 @@ class Mailer {
 
     return mailOptions;
   }
-  async getBase64Extension(base64Data, fileType) {
+  async getBase64Extension(base64Data: any, fileType: any) {
     const mime = await fileType.fileTypeFromBuffer(
       await Buffer.from(base64Data, "base64")
     );
     return mime.ext;
   }
 
-  sendMailAsync(mailOptions, callback) {
+  sendMailAsync(mailOptions: any, callback: any) {
     this.transporter.sendMail(mailOptions, callback);
   }
 
-  sendMailSync(mailOptions) {
+  sendMailSync(mailOptions: any) {
     const mailer = this;
 
     return new Promise(function (resolve, reject) {
@@ -198,4 +224,4 @@ class Mailer {
   }
 }
 
-module.exports = Mailer;
+export { Mailer };
