@@ -25,6 +25,7 @@ app.use(
       "http://panel.dealence.com",
       "https://app.dealence.com",
       "http://localhost:3000",
+      "http://localhost:3001"
     ],
     credentials: true,
   })

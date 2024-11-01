@@ -15,7 +15,8 @@ import moment from "moment";
 
 export const getPagination = (page: any, size: any) => {
   const limit = size ? +size : 10;
-  const offset = page ? page * limit : 0;
+  const offset = page ?? 1 ? (page - 1) * limit : 0;
+
   return { limit, offset };
 };
 export const getPagingData = (data: any, page: any, limit: any) => {
@@ -50,7 +51,7 @@ const userController = {
       by: parseFloat(amount),
       where: { userId: req.params.id },
     });
-    return res.send("success");
+     res.send("success");
   },
 
   updateUserDetails: async (req: Request, res: Response) => {
@@ -89,10 +90,11 @@ const userController = {
         { where: { id: req.params.id } }
       );
 
-      return res.send("success");
+      res.send("success");
+      return;
     }
 
-    // return res.send('success');
+    res.status(402).send("failed");
   },
   getUserInvestments: async (req: Request, res: Response) => {
     const user = await User.findAll({
@@ -116,7 +118,7 @@ const userController = {
         )
         .toFixed(2);
 
-      return res.status(202).send({
+       res.status(202).send({
         createdAt: investment.createdAt,
         id: investment.id,
         reinvestIncome: investment.reinvestIncome,
@@ -126,8 +128,9 @@ const userController = {
         principal: principal,
         plan: increments[0].plan,
       });
+      return
     } else {
-      return res.status(202).send("");
+       res.status(202).send("");
     }
     // return res.send('success');
   },
@@ -306,7 +309,8 @@ const userController = {
         where: { userId: req.params.id },
       });
 
-      return res.status(201).send("success");
+       res.status(201).send("success");
+       return
     } else {
       res.send("Not enough balance");
     }
@@ -327,7 +331,8 @@ const userController = {
         where: { userId: req.params.id },
       });
 
-      return res.status(201).send("success");
+      res.status(201).send("success");
+      return
     } else {
       res.send("Not enough balance");
     }
@@ -347,7 +352,8 @@ const userController = {
         where: { userId: req.params.id },
       });
 
-      return res.status(201).send("success");
+      res.status(201).send("success");
+      return
     } else {
       res.send("Your entered amount is bigger than his balance");
     }
@@ -367,7 +373,8 @@ const userController = {
         where: { userId: req.params.id },
       });
 
-      return res.status(201).send("success");
+      res.status(201).send("success");
+      return 
     } else {
       res.send("Your entered amount is bigger than his total payout");
     }
@@ -393,7 +400,8 @@ const userController = {
     account.availableCredit += amount;
 
     await account.save();
-    return res.status(201).send("success");
+    res.status(201).send("success");
+    return
     // }
   },
   updateIncrement: async (req: Request, res: Response) => {

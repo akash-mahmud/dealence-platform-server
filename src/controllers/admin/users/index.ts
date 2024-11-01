@@ -54,7 +54,7 @@ const usersController = {
       } catch (error) {
         const errorString = `Error sending email: ${error}`;
 
-        res.send({ message: errorString });
+        res.status(500).send({ message: errorString });
       }
     }
   },
@@ -68,9 +68,50 @@ const usersController = {
 
       res.send({ message: "User update mail send" });
     } catch (error) {
+      console.log(error);
+
       const errorString = `Error sending email: ${error}`;
 
-      res.send({ message: errorString });
+      res.status(500).send({ message: errorString });
+    }
+  },
+  approve: async (req: Request, res: Response) => {
+    try {
+      const user = await User.findOne({ where: { id: req.body.id } });
+
+      if (!user) {
+        res.status(404).send("User does not exists");
+      }
+      if (user.dataValues.isDocumentUploaded === false) {
+        res.status(403).send("User does not exists");
+      }
+
+      if (user) {
+        await User.update(
+          {
+            isActive: true,
+          },
+          { where: { id: req.body.id } }
+        );
+
+        const mailer = new Mailer();
+        let documentApprove = await mailer.getUpAprooveInfoMail(user);
+        try {
+          await mailer.sendMailSync(documentApprove);
+
+          res.send({ message: "User updated successfully" });
+        } catch (error) {
+          console.log(error);
+
+          const errorString = `Error sending email: ${error}`;
+
+          res.status(500).send({ message: errorString });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+
+      res.status(400).send("Something went wrong!");
     }
   },
 };

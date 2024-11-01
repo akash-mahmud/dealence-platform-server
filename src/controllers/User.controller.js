@@ -17,14 +17,10 @@ exports.me = async function (req, res) {
 
       res.send(user);
     } else {
-      res
-        .status(403)
-        .send("unauthorised");
+      res.status(403).send("unauthorised");
     }
   } catch (error) {
-    res
-      .status(403)
-      .send(error.message);
+    res.status(403).send(error.message);
   }
 };
 
@@ -33,17 +29,16 @@ exports.login = function (req, res, next) {
     if (err) throw err;
     if (!user) res.send("No User Exists");
     else {
-      if (user?.status ==='active') {
+      if (user?.status === "active") {
         req.logIn(user, (err) => {
           if (err) throw err;
           res.send("success");
         });
-      }else{
+      } else {
         res.status(402).json({
-        message:'restricted'});
-
+          message: "restricted",
+        });
       }
-
     }
   })(req, res, next);
 };
@@ -62,7 +57,7 @@ exports.register = async function (req, res) {
         phone_number: req.body.phone_number,
         referrer_code: req.body.referrer_code,
         password: hashedPassword,
-        status:'active'
+        status: "active",
       });
 
       await Account.create({
@@ -70,14 +65,11 @@ exports.register = async function (req, res) {
         userId: user.id,
       });
 
-
       return res.send("success");
     } catch (error) {
       console.log(error);
       return res.status(404).send(error.message);
     }
-
-
   }
 };
 
@@ -190,16 +182,15 @@ exports.updateInfo = async function (req, res) {
     );
 
     try {
- const resEmail= await mailer.sendMailSync(documentVerificationEmail);
+      const resEmail = await mailer.sendMailSync(documentVerificationEmail);
       console.log(resEmail);
-       await User.update(
-         {
-
-           isDocumentUploaded: true,
-           isContractSigned: true,
-         },
-         { where: { id: req.user.id } }
-       );   
+      await User.update(
+        {
+          isDocumentUploaded: true,
+          isContractSigned: true,
+        },
+        { where: { id: req.user.id } }
+      );
       res.send({ message: "User updated successfully" });
     } catch (error) {
       const errorString = `Error sending email: ${error}`;

@@ -3,7 +3,13 @@ import { dataRoutes } from "./data";
 import { verifiedUserRoutes } from "./verified";
 import { usersController } from "../../controllers/admin/users";
 import { userController } from "../../controllers/admin/user.controller";
-const { delete: DeleteUser, getAll, search, discardUser } = usersController;
+const {
+  delete: DeleteUser,
+  getAll,
+  search,
+  discardUser,
+  approve,
+} = usersController;
 const {
   addUserTransaction,
   updateAvailableCredit,
@@ -15,30 +21,33 @@ const {
   getUserAccountDetails,
   getInvestment,
   getUserInvestments,
+  createAvailableCredit,
+  createBalanceLog,
+  createTotalPaid,
+  createUserPlan,
 } = userController;
+
 const userRouter = express.Router();
 const usersRouter = express.Router();
 /**
  *  ? User routes
  */
-userRouter.post("/transaction/add/:id");
-userRouter.get("/update/details/:id", );
-userRouter.get("/investment/list/:id");
-userRouter.get("/account/:id");
-userRouter.get("/plan/create/:id");
-userRouter.get("/balancelog/create/:id");
-userRouter.get("/totalpaid/create/:id");
-userRouter.get("/availablecredit/create/:id");
-userRouter.get("/editPlan/:id/:incrementId");
-userRouter.get("/edittotalpaid/:totalpaidId");
-userRouter.get("/updatePlan/:id");
-userRouter.get("/investment/list/:id");
-userRouter.get("/edittotalpaid/:totalpaidId");
-userRouter.get("/edittotalpaid/:totalpaidId");
-userRouter.get("/editbalancelog/:balanceId");
-userRouter.get("/editavailablecredit/:creditId");
+userRouter.post("/transaction/add/:id" , addUserTransaction);
+userRouter.post("/update/details/:id", updateUserDetails);
+userRouter.get("/investment/list/:id" , getUserInvestments);
+userRouter.get("/account/:id", getUserAccountDetails);
+userRouter.post("/plan/create/:id", createUserPlan);
+userRouter.post("/balancelog/create/:id" , createBalanceLog);
+userRouter.post("/totalpaid/create/:id" , createTotalPaid);
+userRouter.post("/availablecredit/create/:id", createAvailableCredit);
+userRouter.post("/editPlan/:id/:incrementId", updateIncrement);
+userRouter.post("/edittotalpaid/:totalpaidId" , updateTotalpaidId);
+userRouter.post("/updatePlan/:id" , updateplan);
 
-userRouter.use("/verified", verifiedUserRoutes);
+
+userRouter.post("/editbalancelog/:balanceId" , updateBlancelog);
+userRouter.post("/editavailablecredit/:creditId" , updateAvailableCredit);
+
 userRouter.use("/data", dataRoutes);
 
 /**
@@ -46,8 +55,9 @@ userRouter.use("/data", dataRoutes);
  */
 usersRouter.post("/delete", DeleteUser);
 usersRouter.get("/", getAll);
+usersRouter.post("/", approve);
 usersRouter.get("/search", search);
-usersRouter.get("/discard", discardUser);
-usersRouter.get("/verified", verifiedUserRoutes);
+usersRouter.post("/discard", discardUser);
+usersRouter.use("/verified", verifiedUserRoutes);
 
 export { userRouter, usersRouter };

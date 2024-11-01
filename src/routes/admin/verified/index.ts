@@ -12,11 +12,12 @@ const {
   deleteAvailablecredit,
   deleteUserBalanceLog,
   deleteUserTotalPaid,
-  deleteUsersPlan,
+  deleteUsersPlan,getVerifiedUser
 } = verifiedController;
 const verifiedUserRoutes = express.Router();
 
 verifiedUserRoutes.get("/", getAllVerifiedUsers);
+verifiedUserRoutes.get("/:id", getVerifiedUser);
 verifiedUserRoutes.get("/plans/:id", getUserPlansDetails);
 verifiedUserRoutes.get("/plan/:id/:increamentId", getUserPlanIncrementDetails);
 verifiedUserRoutes.get("/planbalance/:balanceId", getUserPlanBalanceDetails);

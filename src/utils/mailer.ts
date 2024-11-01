@@ -2,26 +2,48 @@ import nodemailer, { Transporter } from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 class Mailer {
-  getUpAprooveInfoMail(user: any) {
-    throw new Error("Method not implemented.");
-  }
-  getUpDAteInfoMail(user: any) {
-    throw new Error("Method not implemented.");
-  }
+
   transporter: Transporter<
     SMTPTransport.SentMessageInfo,
     SMTPTransport.Options
   >;
   constructor() {
     this.transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: 'smtp.office365.com',
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.ADMIN_EMAIL,
         pass: process.env.ADMIN_EMAIL_PASSWORD,
       },
+      tls: {
+        rejectUnauthorized: true,
+      },
+  
     });
   }
+  async getUpDAteInfoMail(user: { email: any; }) {
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: user.email,
+      subject: 'Nuovo deposito',
+      text:
+        `Your information is not correct. Mail us with your proper document`,
+    };
 
+    return mailOptions;
+  }
+
+  async getUpAprooveInfoMail(user: { email: any; }) {
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
+      to: user.email,
+      subject: 'Nuovo deposito',
+      text: `The account is approved`,
+    };
+
+    return mailOptions;
+  }
   getPasswordRecoveryMail(toEmail: string, token: string) {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,

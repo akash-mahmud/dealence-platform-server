@@ -28,6 +28,12 @@ const verifiedController = {
     const response = getPagingData(users, page, limit);
     res.send(response);
   },
+  getVerifiedUser: async (req: Request, res: Response) => {
+    const user = await User.findAll({
+      where: { id: req.params.id },
+    });
+    res.send(user);
+  },
   getVerifiedUserById: async (req: Request, res: Response) => {
     const user = await User.findAll({
       where: { id: req.params.id },
