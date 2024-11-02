@@ -12,25 +12,27 @@ const {
   deleteAvailablecredit,
   deleteUserBalanceLog,
   deleteUserTotalPaid,
-  deleteUsersPlan,getVerifiedUser
+  deleteUsersPlan,getVerifiedUser,
+  getUserTotalpaids
 } = verifiedController;
 const verifiedUserRoutes = express.Router();
 
 verifiedUserRoutes.get("/", getAllVerifiedUsers);
-verifiedUserRoutes.get("/:id", getVerifiedUser);
 verifiedUserRoutes.get("/plans/:id", getUserPlansDetails);
+verifiedUserRoutes.get("/plan/balance/:balanceId", getUserPlanBalanceDetails);
 verifiedUserRoutes.get("/plan/:id/:increamentId", getUserPlanIncrementDetails);
-verifiedUserRoutes.get("/planbalance/:balanceId", getUserPlanBalanceDetails);
+verifiedUserRoutes.get("/:id", getVerifiedUser);
 verifiedUserRoutes.get(
   "/availablecredit/:creditId",
   getUserAvailableCreditDetails
 );
 verifiedUserRoutes.get("/balancelogs/:id", getUserBalanceLogs);
-verifiedUserRoutes.get("/totalpaids/:id", getUserTotalPaidDetails);
+verifiedUserRoutes.get("/totalpaids/:id", getUserTotalpaids);
+verifiedUserRoutes.get("/totalpaid/:totalpaidId", getUserTotalPaidDetails);
 verifiedUserRoutes.get("/availablecredits/:id", getUserAvilablecredits);
 verifiedUserRoutes.delete("/plan/delete/:id", deleteUsersPlan);
 verifiedUserRoutes.delete("/balancelog/delete/:id", deleteUserBalanceLog);
-verifiedUserRoutes.delete("totalpaid/delete/:id", deleteUserTotalPaid);
+verifiedUserRoutes.delete("/totalpaid/delete/:id", deleteUserTotalPaid);
 verifiedUserRoutes.delete("/availablecredit/delete/:id", deleteAvailablecredit);
 
 export { verifiedUserRoutes };

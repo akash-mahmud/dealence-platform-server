@@ -26,11 +26,21 @@ export const getPagingData = (data: any, page: any, limit: any) => {
   return { totalItems, users, totalPages, currentPage };
 };
 // plans
-export const getPagingDataResponse = (data: any, page: any, limit: any) => {
+export const getPagingDataResponse = (
+  data: any,
+  page: any,
+  limit: any,
+  name?: string
+) => {
   const { count: totalItems, rows: increment } = data;
   const currentPage = page ? +page : 0;
   const totalPages = Math.ceil(totalItems / limit);
-  return { totalItems, increment, totalPages, currentPage };
+  return {
+    totalItems,
+    [name ? name : "increment"]: increment,
+    totalPages,
+    currentPage,
+  };
 };
 
 const userController = {
@@ -51,7 +61,7 @@ const userController = {
       by: parseFloat(amount),
       where: { userId: req.params.id },
     });
-     res.send("success");
+    res.send("success");
   },
 
   updateUserDetails: async (req: Request, res: Response) => {
@@ -118,7 +128,7 @@ const userController = {
         )
         .toFixed(2);
 
-       res.status(202).send({
+      res.status(202).send({
         createdAt: investment.createdAt,
         id: investment.id,
         reinvestIncome: investment.reinvestIncome,
@@ -128,9 +138,9 @@ const userController = {
         principal: principal,
         plan: increments[0].plan,
       });
-      return
+      return;
     } else {
-       res.status(202).send("");
+      res.status(202).send("");
     }
     // return res.send('success');
   },
@@ -259,11 +269,10 @@ const userController = {
     }
   },
   createAvailableCredit: async (req: Request, res: Response) => {
-    let { startDate, credit, contract } = req.body;
-    const { id } = req.params;
-    credit = parseFloat(req.body.credit);
-
     try {
+      let { credit, contract } = req.body;
+      const { id } = req.params;
+      credit = parseFloat(req.body.credit);
       // const validBody = availableCreditSchema.validate(req.body);
       const validBody = { error: null };
 
@@ -272,8 +281,7 @@ const userController = {
         await AvailableCredit.create({
           credit: credit,
           contract: contract,
-          createdAt: new Date(startDate),
-          updatedAt: new Date(startDate),
+
           userId: id,
         });
 
@@ -281,7 +289,7 @@ const userController = {
       }
     } catch (err) {
       console.log(err);
-      res.send(err);
+      res.status(402).send("Something went wrong!");
     }
   },
   withdrawPayout: async (req: Request, res: Response) => {
@@ -309,8 +317,8 @@ const userController = {
         where: { userId: req.params.id },
       });
 
-       res.status(201).send("success");
-       return
+      res.status(201).send("success");
+      return;
     } else {
       res.send("Not enough balance");
     }
@@ -332,7 +340,7 @@ const userController = {
       });
 
       res.status(201).send("success");
-      return
+      return;
     } else {
       res.send("Not enough balance");
     }
@@ -353,7 +361,7 @@ const userController = {
       });
 
       res.status(201).send("success");
-      return
+      return;
     } else {
       res.send("Your entered amount is bigger than his balance");
     }
@@ -374,7 +382,7 @@ const userController = {
       });
 
       res.status(201).send("success");
-      return 
+      return;
     } else {
       res.send("Your entered amount is bigger than his total payout");
     }
@@ -401,7 +409,7 @@ const userController = {
 
     await account.save();
     res.status(201).send("success");
-    return
+    return;
     // }
   },
   updateIncrement: async (req: Request, res: Response) => {
@@ -542,84 +550,95 @@ const userController = {
     }
   },
   updateplan: async (req: Request, res: Response) => {
-    let { startDate, amount } = req.body;
-    amount = parseInt(amount);
-    var account = await Account.findOne({
-      where: {
-        userId: req.params.id,
-      },
-    });
-
-    // const validBody = schema.validate(req.body);
-    const validBody = { error: null };
-
-    if (validBody.error == null) {
-      var investment = await Investment.findOne({
-        where: { userId: req.params.id },
+    try {
+      let { startDate, amount } = req.body;
+      amount = parseInt(amount);
+      var account = await Account.findOne({
+        where: {
+          userId: req.params.id,
+        },
       });
 
-      if (investment == null) {
-        res.status(400).send({
-          message: "User has no investment yet. Please create one first",
+      // const validBody = schema.validate(req.body);
+      const validBody = { error: null };
+
+      if (validBody.error == null) {
+        var investment = await Investment.findOne({
+          where: { userId: req.params.id },
         });
 
-        return;
-      }
-      await Earned.create({
-        plan: req.body.plan,
-        principal: parseFloat(req.body.amount),
-        startDate: new Date(startDate),
+        if (investment == null) {
+          res.status(400).send({
+            message: "User has no investment yet. Please create one first",
+          });
 
-        userId: req.params.id,
-        investmentId: investment.id,
-      });
-
-      const daysElapsed = moment(new Date()).diff(investment.createdAt, "days");
-      const increments = await Increment.findAll({
-        order: [["createdAt", "ASC"]],
-        where: { userId: req.params.id },
-      });
-
-      if (increments.length == 1 && daysElapsed <= 15) {
-        // If the user has only made a single investment
-        // and less than 15 days have passed update the
-        // first increment's principal, plan and start
-        // date
-        const firstIncrement = increments[0];
-
-        await firstIncrement.update({
-          plan: req.body.plan,
-          principal: firstIncrement.principal + parseFloat(req.body.amount),
-          startDate: new Date(startDate),
-          createdAt: new Date(startDate),
-          contract: req.body.contract,
-        });
-      } else {
-        // If more than 15 days have elapsed or the user
-        // has more than a single increment create a new
-        // increment with the invested amount as the principal
-        await Increment.create({
+          return;
+        }
+        await Earned.create({
           plan: req.body.plan,
           principal: parseFloat(req.body.amount),
           startDate: new Date(startDate),
 
           userId: req.params.id,
           investmentId: investment.id,
-          contract: req.body.contract,
+        });
+
+        const daysElapsed = moment(new Date()).diff(
+          investment.startDate,
+          "days"
+        );
+        const increments = await Increment.findAll({
+          order: [["createdAt", "ASC"]],
+          where: { userId: req.params.id },
+        });
+
+        if (increments.length == 1 && daysElapsed <= 15) {
+          // If the user has only made a single investment
+          // and less than 15 days have passed update the
+          // first increment's principal, plan and start
+          // date
+          const firstIncrement = increments[0];
+
+          await firstIncrement.update({
+            plan: req.body.plan,
+            principal: firstIncrement.principal + parseFloat(req.body.amount),
+            startDate: new Date(startDate),
+            createdAt: new Date(startDate),
+            contract: req.body.contract,
+          });
+        } else {
+          // If more than 15 days have elapsed or the user
+          // has more than a single increment create a new
+          // increment with the invested amount as the principal
+          await Increment.create({
+            plan: req.body.plan,
+            principal: parseFloat(req.body.amount),
+            startDate: new Date(startDate),
+
+            userId: req.params.id,
+            investmentId: investment.id,
+            contract: req.body.contract,
+          });
+        }
+
+        await Account.decrement("balance", {
+          by: req.body.amount,
+          where: { userId: req.params.id },
+        });
+
+        res.send({
+          message: "success",
+        });
+      } else {
+        res.status(400).send({
+          message: "invalid payload",
         });
       }
+    } catch (error: any) {
+      console.log(error.message);
 
-      await Account.decrement("balance", {
-        by: req.body.amount,
-        where: { userId: req.params.id },
-      });
-
-      res.send({
-        message: "success",
-      });
-    } else {
-      res.status(400).send({
-        message: "invalid payload",
+      res.status(401).send({
+        message: "failed",
       });
     }
   },

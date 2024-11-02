@@ -6,7 +6,11 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       primaryKey: true,
     },
-
+    balance: {
+      type: Sequelize.REAL,
+      defaultValue: 0.0,
+      allowNull: false,
+    },
 
     availableCredit: {
       type: Sequelize.REAL,

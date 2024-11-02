@@ -29,10 +29,15 @@ const verifiedController = {
     res.send(response);
   },
   getVerifiedUser: async (req: Request, res: Response) => {
-    const user = await User.findAll({
-      where: { id: req.params.id },
-    });
-    res.send(user);
+    try {
+      const user = await User.findAll({
+        where: { id: req.params.id },
+      });
+      res.send(user);
+    } catch (error) {
+      // console.log(error);
+      res.send([]);
+    }
   },
   getVerifiedUserById: async (req: Request, res: Response) => {
     const user = await User.findAll({
@@ -42,20 +47,29 @@ const verifiedController = {
   },
 
   getUserPlansDetails: async (req: Request, res: Response) => {
-    const condition = { userId: req.params.id };
-    const { page, size } = req.query;
-    const { limit, offset } = getPagination(page, size);
+    try {
+      console.log("hello hi bye");
+      console.log(req.params.id);
 
-    const plansData = await Increment.findAndCountAll({
-      where: condition,
-      order: [["createdAt", "ASC"]],
-      limit,
-      offset,
-    });
+      const condition = { userId: req.params.id };
+      const { page, size } = req.query;
+      const { limit, offset } = getPagination(page, size);
 
-    const response = getPagingDataResponse(plansData, page, limit);
+      const plansData = await Increment.findAndCountAll({
+        where: condition,
+        order: [["createdAt", "ASC"]],
+        limit,
+        offset,
+      });
 
-    res.send(response);
+      const response = getPagingDataResponse(plansData, page, limit);
+
+      res.send(response);
+    } catch (error) {
+      console.log(error);
+
+      res.send(401).send({});
+    }
   },
 
   getUserPlanIncrementDetails: async (req: Request, res: Response) => {
@@ -78,13 +92,17 @@ const verifiedController = {
   },
 
   getUserTotalPaidDetails: async (req: Request, res: Response) => {
-    const totalpaidData = await TotalPaid.findOne({
-      where: {
-        id: req.params.totalpaidId,
-      },
-    });
+    try {
+      const totalpaidData = await TotalPaid.findOne({
+        where: {
+          id: req.params.totalpaidId,
+        },
+      });
 
-    res.send(totalpaidData);
+      res.send(totalpaidData);
+    } catch (error) {
+      res.status(402).send();
+    }
   },
   getUserAvailableCreditDetails: async (req: Request, res: Response) => {
     const availablecreditData = await AvailableCredit.findOne({
@@ -107,7 +125,12 @@ const verifiedController = {
       offset,
     });
 
-    const response = getPagingDataResponse(plansData, page, limit);
+    const response = getPagingDataResponse(
+      plansData,
+      page,
+      limit,
+      "balanceLogs"
+    );
 
     res.send(response);
   },
@@ -125,7 +148,12 @@ const verifiedController = {
       offset,
     });
 
-    const response = getPagingDataResponse(plansData, page, limit);
+    const response = getPagingDataResponse(
+      plansData,
+      page,
+      limit,
+      "totalPaids"
+    );
 
     res.send(response);
   },
@@ -144,7 +172,12 @@ const verifiedController = {
       offset,
     });
 
-    const response = getPagingDataResponse(plansData, page, limit);
+    const response = getPagingDataResponse(
+      plansData,
+      page,
+      limit,
+      "availablecredits"
+    );
 
     res.send(response);
   },
@@ -180,11 +213,17 @@ const verifiedController = {
   },
 
   deleteAvailablecredit: async (req: Request, res: Response) => {
-    await BalanceUpdateLog.destroy({
-      where: { id: req.params.id },
-    });
+    try {
+      const database = await AvailableCredit.destroy({
+        where: { id: req.params.id },
+      });
 
-    res.status(201).send("success");
+      res.status(200).send("success");
+    } catch (error) {
+      console.log(error);
+
+      res.status(405).send("Something went wrong!");
+    }
   },
 };
 
