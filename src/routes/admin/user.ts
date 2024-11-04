@@ -35,6 +35,7 @@ const usersRouter = express.Router();
 userRouter.post("/transaction/add/:id" , addUserTransaction);
 userRouter.post("/update/details/:id", updateUserDetails);
 userRouter.get("/investment/list/:id" , getUserInvestments);
+userRouter.post("/investment/list/:id" , getInvestment);
 userRouter.get("/account/:id", getUserAccountDetails);
 userRouter.post("/plan/create/:id", createUserPlan);
 userRouter.post("/balancelog/create/:id" , createBalanceLog);

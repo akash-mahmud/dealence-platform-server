@@ -4,6 +4,7 @@ const express = require("express");
 const userRoutes = require("./user");
 const accountRoutes = require("./account");
 import adminRoutes from './admin'
+import { mediaRoutes } from "./media";
 const transactionRoutes = require("./transaction");
 const investmentRoutes = require("./investment");
 const availablecreditRoutes = require("./availablecredit");
@@ -19,6 +20,7 @@ router.get("/", (req:Request, res:Response) => {
 });
 
 router.use("/account", accountRoutes);
+router.use("/media", mediaRoutes);
 router.use("/admin", adminRoutes);
 router.use("/contract", conractRoutes);
 router.use("/user", userRoutes);
