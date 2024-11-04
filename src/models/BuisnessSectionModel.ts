@@ -1,4 +1,6 @@
-module.exports = (sequelize, Sequelize) => {
+import { DataTypes, Sequelize } from "sequelize";
+
+const BuisnessSectionModel = (sequelize:Sequelize, Sequelize:any) => {
   const BuisnessSectionModel = sequelize.define("buisnessSectionModel", {
     id: {
       type: Sequelize.UUID,
@@ -12,7 +14,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     },
     description: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: false,
     },
     logo: {
@@ -34,3 +36,14 @@ module.exports = (sequelize, Sequelize) => {
   });
   return BuisnessSectionModel;
 };
+export {
+  BuisnessSectionModel
+}
+
+// 1730728423345-functions-and-graphs.pdf
+// 1730733157637-functions_and_graphs_gelfand.pdf
+// 1730733213101-pdfcoffee.com_liz-grammar-volume-2-pdf-pdf-free.pdf
+// 1730733303894-IELTS_Band9_VocabSecrets.pdf
+
+
+// 1730733477909-logo.png

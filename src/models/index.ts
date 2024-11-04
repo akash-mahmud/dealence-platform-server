@@ -1,4 +1,5 @@
 import {Sequelize}  from "sequelize";
+import { BuisnessSectionModel } from "./BuisnessSectionModel";
 
 // const sequelize = new Sequelize('sqlite::memory:', { logging: false });
 
@@ -6,7 +7,6 @@ import {Sequelize}  from "sequelize";
   "postgres://postgres:1234@localhost:5432/delance",
   { logging: false }
 );
-
 //heroku beta test database
 // const sequelize = new Sequelize(
 //   `postgres://siedclrjwwanip:67561336687c7d9891c75e1d6ad750890ae1f03d1db7909a7bdafdad302cffef@ec2-52-3-200-138.compute-1.amazonaws.com:5432/dd89kpmgenns2s`,
@@ -24,7 +24,6 @@ const IncrementModel = require("./Increment.model");
 const TransactionModel = require("./Transaction.model");
 const PayoutModel = require("./Payout.model");
 const EarnedModel = require("./Earned.model");
-const BuisnessSectionModel = require("./BuisnessSectionModel");
 
 const User = UserModel(sequelize, Sequelize);
 const Account = AccountModel(sequelize, Sequelize);

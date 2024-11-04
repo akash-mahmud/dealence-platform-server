@@ -5,13 +5,13 @@ const userRoutes = require("./user");
 const accountRoutes = require("./account");
 import adminRoutes from './admin'
 import { mediaRoutes } from "./media";
+import { buisnessSectionRouter } from "./buisnessSection";
 const transactionRoutes = require("./transaction");
 const investmentRoutes = require("./investment");
 const availablecreditRoutes = require("./availablecredit");
 const totalpaidRoutes = require("./totalpaid");
 const conractRoutes = require("./contract");
 const balanceUpdateLogRoutes = require("./balanceUpdateLog");
-const buisnessSectionRoutes = require("./buisnessSection");
 const PaypalController = require("../controllers/Paypal.controller");
 const router = express.Router();
 
@@ -30,5 +30,5 @@ router.use("/availablecredit", availablecreditRoutes);
 router.use("/totalpaid", totalpaidRoutes);
 router.use("/balanceUpdateLog", balanceUpdateLogRoutes);
 router.use("/api/config/paypal", PaypalController);
-router.use("/buisness-section", buisnessSectionRoutes);
+router.use("/buisness-section", buisnessSectionRouter);
 export default router;
